@@ -1,10 +1,8 @@
-import datetime
 import logging
 from unittest import TestCase
 
 from easy_logstash.constants import LOG_LEVELS, LOGSTASH_NAMESPACE
 from easy_logstash.django_logstash_config import DjangoLogstashConfig
-from easy_logstash.logstash_config import EasyLogstashConfig
 from tests.mixins import TestMixin
 
 
