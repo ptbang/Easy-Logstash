@@ -72,16 +72,16 @@ You can also configure the constant LOGGING in your `setting.py` file in a very 
 ...
 from easy_logstash import DjangoLogstashConfig
 
-LOGGING_CONFIG = DjangoLogstashConfig(
+LOG_CONFIG = DjangoLogstashConfig(
     LOGSTASH_HOST, LOGSTASH_PORT, LOGSTASH_DATABASE_PATH, 'example-com-test'
 )
-LOGGING = LOGGING_CONFIG.get_dict_config()
+LOGGING = LOG_CONFIG.get_dict_config()
 ...
 
 # foo.py
 from django.conf import settings
 
-logger = settings.LOGGING_CONFIG.get_logger(__name__)
+logger = settings.LOG_CONFIG.get_logger(__name__)
 logger.warning('Some things look strangely ...')
 ```
 
@@ -96,15 +96,8 @@ input {
 
 	tcp {
 		port => 50000
+		codec => json_lines {}
 	}
-}
-
-## Add your filters / logstash plugins configuration here
-filter {
-  json {
-    source => "message"
-    #add_field => {"log_time" => " %{@timestamp}"}
-  }
 }
 
 output {
@@ -112,7 +105,7 @@ output {
 		hosts => "elasticsearch:9200"
 		user => "logstash_internal"
 		password => "strong_password"
-		index => "%{[@metadata][elasticsearch_index]}"
+		index => "%{[@metadata][index_suffix]}"
 	}
 }
 ```
